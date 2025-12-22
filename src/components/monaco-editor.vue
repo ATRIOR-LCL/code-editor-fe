@@ -7,18 +7,24 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import * as monaco from 'monaco-editor';
+import { Inject } from 'vue-property-decorator';
 
 @Options({})
 export default class MonacoEditor extends Vue {
+
   mounted() {
     this.$nextTick(() => {
       const el = this.$refs.el as HTMLDivElement;
-      console.log('container:', el);
 
-      monaco.editor.create(el, {
-        value: 'hello monaco',
-        language: 'plaintext',
+       const editor = monaco.editor.create(el, {
+        value: '',
+        language: 'cpp',
         theme: 'vs-dark',
+      });
+
+      editor.onDidChangeModelContent(() => {
+        const code = editor.getValue();
+        console.log('Code changed:', code);
       });
     });
   }
