@@ -1,8 +1,8 @@
-export interface GetCodeReqDTO {
+export interface GetCodeLexicalAnalysisReqDTO {
   code: string;
 }
 
-export interface GetCodeResSuccessDTO {
+export interface GetCodeLexicalAnalysisResSuccessDTO {
   col_end: number;
   col_start: number;
   line: number;
@@ -10,12 +10,12 @@ export interface GetCodeResSuccessDTO {
   value: string;
 }
 
-export interface GetCodeResFaildDTO extends GetCodeResSuccessDTO {
+export interface GetCodeLexicalAnalysisResFaildDTO extends GetCodeLexicalAnalysisResSuccessDTO {
   message: string;
 }
 
 export interface Res {
   success: boolean;
   code: number;
-  data: (GetCodeResSuccessDTO | GetCodeResFaildDTO)[];
+  data: (GetCodeLexicalAnalysisResSuccessDTO | GetCodeLexicalAnalysisResFaildDTO)[];
 }

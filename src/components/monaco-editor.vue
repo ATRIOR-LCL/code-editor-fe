@@ -11,20 +11,37 @@ import { Inject } from 'vue-property-decorator';
 
 @Options({})
 export default class MonacoEditor extends Vue {
+  @Inject()
+  updateCode!: (newCode: string) => void;
 
   mounted() {
     this.$nextTick(() => {
       const el = this.$refs.el as HTMLDivElement;
 
-       const editor = monaco.editor.create(el, {
+      monaco.editor.defineTheme('myTheme', {
+        base: 'vs-dark', // vs / vs-dark / hc-black
+        inherit: true,
+        rules: [],
+        colors: {
+          'editor.background': '#111111', // 设置背景色
+        },
+      });
+
+      const editor = monaco.editor.create(el, {
         value: '',
         language: 'cpp',
-        theme: 'vs-dark',
+        fontSize: 16,
+        theme: 'myTheme',
+        minimap: { enabled: false },
+        scrollbar: {
+          verticalScrollbarSize: 0,
+          horizontalScrollbarSize: 0,
+        },
       });
 
       editor.onDidChangeModelContent(() => {
-        const code = editor.getValue();
-        console.log('Code changed:', code);
+        const code = editor?.getValue() || '';
+        this.updateCode(code);
       });
     });
   }

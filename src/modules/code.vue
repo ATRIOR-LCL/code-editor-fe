@@ -1,10 +1,11 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
+import { HomeState } from '@/common/interface/data';
 
 import MonacoEditor from '@/components/monaco-editor.vue';
 import { ElButton, ElIcon } from 'element-plus';
-import { Check } from '@element-plus/icons-vue';
+import { Check, Stopwatch } from '@element-plus/icons-vue';
 
 @Options({
   components: {
@@ -12,19 +13,35 @@ import { Check } from '@element-plus/icons-vue';
     ElButton,
     Check,
     ElIcon,
+    Stopwatch,
   },
 })
 export default class Code extends Vue {
+  @Inject()
+  homeState!: HomeState;
+  @Inject()
+  saveCode!: () => void;
+
+  @Inject()
+  runCode!: () => void;
 }
 </script>
 
 <template>
   <div class="code-container">
+    <!-- 代码操作栏 -->
     <div class="btn-container">
-      <el-button type="primary" size="small">
-        <el-icon size="large" style="margin-right: 5px"><Check /></el-icon> Run Code</el-button
+      <el-button size="small" @click="saveCode" :disabled="homeState.isSaved">
+        <el-icon size="large" style="margin-right: 5px"><Check /></el-icon>
+        Save
+      </el-button>
+
+      <el-button type="primary" size="small" @click="runCode">
+        <el-icon size="large" style="margin-right: 5px"><Stopwatch /></el-icon> Run Code</el-button
       >
     </div>
+
+    <!-- 代码框组件 -->
     <MonacoEditor />
   </div>
 </template>

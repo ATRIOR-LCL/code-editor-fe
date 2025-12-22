@@ -1,12 +1,13 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import { ElIcon } from 'element-plus';
-import { MostlyCloudy } from '@element-plus/icons-vue';
+import { MostlyCloudy, UploadFilled } from '@element-plus/icons-vue';
 
 @Options({
   components: {
     ElIcon,
     MostlyCloudy,
+    UploadFilled,
   },
 })
 export default class NavHeader extends Vue {}
@@ -14,9 +15,14 @@ export default class NavHeader extends Vue {}
 
 <template>
   <header class="nav-header">
-    <el-icon style="margin-right: 10px"><mostly-cloudy /></el-icon>
-    <span class="title">Code Editor</span>
-    <span class="subtitle">online code compile tool</span>
+    <div class="nav-sec">
+      <el-icon style="margin-right: 10px"><mostly-cloudy /></el-icon>
+      <span class="title">Code Editor</span>
+      <span class="subtitle">online code compile tool</span>
+    </div>
+    <div class="nav-sec">
+      <el-icon><upload-filled /></el-icon>
+    </div>
   </header>
 </template>
 
@@ -28,19 +34,35 @@ export default class NavHeader extends Vue {}
   position: fixed;
   top: 0;
   display: flex;
-  justify-content: left;
+  justify-content: space-between;
   align-items: center;
   font-weight: bold;
   padding: 0 100px;
   font-size: 35px;
+  user-select: none;
+
+  & .nav-sec {
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #409EFF;
+
+      & .subtitle {
+        color: #40a0ffa2;
+      }
+    }
+  }
 
   & .subtitle {
-    line-height: 35;
     color: gray;
     font-weight: normal;
+    line-height: 35px;
     font-size: 16px;
-    margin-top:16px;
     margin-left: 10px;
+    transition: all 0.3s ease;
+    transform: translateY(20%);
   }
 }
 </style>

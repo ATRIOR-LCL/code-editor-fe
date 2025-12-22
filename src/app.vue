@@ -2,12 +2,14 @@
 import { Vue, Options } from 'vue-class-component';
 import { Provide } from 'vue-property-decorator';
 import type { HomeState } from './common/interface/data';
+import { lexicalAnalysisFaildRes, lexicalAnalysisSuccessRes } from './utils';
 
 import Code from '@/modules/code.vue';
 import Analize from '@/modules/analize.vue';
 import Terminal from '@/modules/terminal.vue';
 import Navheader from '@/components/nav-header.vue';
 import HomeFooter from '@/components/home-footer.vue';
+import { ElLoading } from 'element-plus';
 
 @Options({
   components: {
@@ -19,18 +21,41 @@ import HomeFooter from '@/components/home-footer.vue';
   },
 })
 export default class App extends Vue {
+  @Provide({ reactive: true })
   homeState: HomeState = {
     code: '',
+    isSaved: true,
   };
 
   @Provide()
-  updateCode(code: string)  {
-    this.homeState.code = code;
+  updateCode(newCode: string): void {
+    this.homeState.code = newCode;
+    this.homeState.isSaved = false;
   }
 
   @Provide()
-  runCode() {
-    console.log('Running code:', this.homeState.code);
+  runCode(): void {
+    const loading = ElLoading.service({
+      lock: true,
+      text: 'Running code...',
+      background: 'rgba(0, 0, 0, 0.7)',
+    });
+
+    setTimeout(() => {
+      this.homeState.lexicalAnalysisState = {
+        success: true,
+        data: lexicalAnalysisSuccessRes,
+      };
+      // this.homeState.errorStates = lexicalAnalysisFaildRes;
+
+      loading.close();
+      console.log('Running code:', this.homeState.code);
+    }, 2000);
+  }
+
+  @Provide()
+  saveCode(): void {
+    this.homeState.isSaved = true;
   }
 
   mounted(): void {
@@ -42,6 +67,8 @@ export default class App extends Vue {
 <template>
   <div class="lay">
     <Navheader />
+
+    <!-- 代码框、编译过程标签页 -->
     <div class="lay-main">
       <div class="lay-code">
         <Code />
@@ -50,9 +77,12 @@ export default class App extends Vue {
         <Analize />
       </div>
     </div>
+
+    <!-- 终端标签页 -->
     <div class="lay-terminal">
       <Terminal />
     </div>
+
     <home-footer />
   </div>
 </template>
