@@ -2,7 +2,6 @@
 import { Vue, Options } from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
 import { HomeState } from '@/common/interface/data.vo';
-import { CodeState } from '@/common/enum/data.enum';
 
 import { ElTabs, ElTabPane } from 'element-plus';
 import LexicalAnalysisTable from '@/components/services/lexical-analysis-table.vue';
@@ -30,14 +29,16 @@ export default class Analize extends Vue {
   <div class="analize-container">
     <!-- 词法分析 -->
     <el-tabs class="demo-tabs">
-      <el-tab-pane label="词法分析" v-if="homeState.lexicalAnalysisState">
+      <el-tab-pane label="词法分析">
         <LexicalAnalysisTable
+        v-if="homeState.lexicalAnalysisState"
           :lexicalAnalysisState="homeState.lexicalAnalysisState"
           :codeState="homeState.codeState"
         />
       </el-tab-pane>
 
       <AnalisisPendingRes v-if="homeState.codeState === 'PENDING'" />
+
       <!-- 语法分析 -->
       <el-tab-pane label="语法分析">
         <SyntaticAnalysisTable
@@ -48,10 +49,7 @@ export default class Analize extends Vue {
       </el-tab-pane>
 
       <!-- 语义分析 -->
-      <el-tab-pane label="语义分析">语义分析</el-tab-pane>
-
-      <!-- 中间代码生成 -->
-      <el-tab-pane label="中间代码生成">中间代码生成</el-tab-pane>
+      <el-tab-pane label="语义分析 & 中间代码生成">语义分析 & 中间代码生成</el-tab-pane>
 
       <!-- 目标代码生成 -->
       <el-tab-pane label="目标代码生成">目标代码生成</el-tab-pane>

@@ -52,7 +52,7 @@ export default class LexicalAnalysisTable extends Vue {
   </header>
 
   <!-- 词法分析 token stream 表格 -->
-  <el-table v-if="codeState === 'SUCCESS'" :data="lexicalAnalysisState" stripe="true">
+  <el-table v-if="codeState === 'SUCCESS'" :data="lexicalAnalysisState" :stripe="true">
     <el-table-column prop="value" label="token" />
     <el-table-column prop="type" label="tokenType" />
   </el-table>
@@ -66,7 +66,7 @@ export default class LexicalAnalysisTable extends Vue {
     width="600px"
     title="Word Classification Table"
   >
-    <el-table :data="lexicalAnalysisState" stripe="true" border>
+    <el-table :data="lexicalAnalysisState" :stripe="true" border>
       <el-table-column prop="value" label="Name" />
       <el-table-column prop="line" label="Kind" />
       <el-table-column prop="type" label="Type" />

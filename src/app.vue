@@ -7,6 +7,7 @@ import {
   lexicalAnalysisSuccessRes,
   syntacticAnalysisSuccessRes,
 } from './utils';
+import { fetchLexicalData, fetchSyntacticData } from './utils/fetch-data';
 
 import Code from '@/modules/code.vue';
 import Analize from '@/modules/analize.vue';
@@ -39,35 +40,70 @@ export default class App extends Vue {
   }
 
   @Provide()
-  runCode(): void {
+  async runCode(): Promise<void> {}
+
+  @Provide()
+  async saveCode(): Promise<void> {
+    this.homeState.isSaved = true;
+    this.homeState.errorStates = undefined;
+
     const loading = ElLoading.service({
       lock: true,
       text: 'Running code...',
       background: 'rgba(0, 0, 0, 0.7)',
     });
 
-    /**
-     * 模拟网络请求
-     * 成功将 codeState 改为 'SUCCESS' 并填充分析结果
-     * 失败将 codeState 改为 'FAILED' 并填充错误结果
-     * 自定义数据来自 src/utils/index.ts
-     */
-    setTimeout(() => {
+    try {
+      // Lexical Analysis
+      try {
+        const fetchLexicalRes = await fetchLexicalData(this.homeState.code);
+        console.log('Fetched lexical analysis result:', fetchLexicalRes);
+        this.homeState = {
+          ...this.homeState,
+          lexicalAnalysisState: fetchLexicalRes.data,
+        };
+      } catch (e) {
+        console.info('Lexical analysis error:', e.response.data);
+        this.homeState = {
+          ...this.homeState,
+          errorStates: {
+            lexicalErrors: e.response.data,
+          },
+        };
+        return;
+      }
+
+      // Synatic Analysis
+      try {
+        const fetchSyntacticRes = await fetchSyntacticData(this.homeState.code);
+        console.log('Fetched syntactic analysis result:', fetchSyntacticRes);
+        this.homeState = {
+          ...this.homeState,
+          syntacticAnalysisState: fetchSyntacticRes.data,
+        };
+      } catch (e) {
+        console.info('Syntactic analysis error:', e.response.data);
+        this.homeState = {
+          ...this.homeState,
+          errorStates: {
+            syntaticErrors: e.response.data,
+          },
+        };
+        return;
+      }
+
       this.homeState = {
         ...this.homeState,
-        lexicalAnalysisState: lexicalAnalysisSuccessRes,
-        syntacticAnalysisState: syntacticAnalysisSuccessRes,
         codeState: 'SUCCESS',
       };
-
+    } catch (error) {
+      this.homeState = {
+        ...this.homeState,
+        codeState: 'ERROR',
+      };
+    } finally {
       loading.close();
-      console.log('Running code:', this.homeState.code);
-    }, 1000);
-  }
-
-  @Provide()
-  saveCode(): void {
-    this.homeState.isSaved = true;
+    }
   }
 
   mounted(): void {
