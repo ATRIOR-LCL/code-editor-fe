@@ -39,7 +39,7 @@ export default class LexicalAnalysisTable extends Vue {
 
 <template>
   <!-- 词法分析 section header -->
-  <header class="lc-header">
+  <header class="lc-header" v-if="codeState === 'SUCCESS'">
     <span>Token Stream</span>
     <el-popover placement="top" width="200" trigger="hover">
       <template #reference>
@@ -56,7 +56,7 @@ export default class LexicalAnalysisTable extends Vue {
     <el-table-column prop="value" label="token" />
     <el-table-column prop="type" label="tokenType" />
   </el-table>
-  <div v-else>程序有语法错误，请查看终端日志。</div>
+  <!-- <div v-else>程序有语法错误，请查看终端日志。</div> -->
 
   <!-- 单词分类表 dialog -->
   <el-dialog

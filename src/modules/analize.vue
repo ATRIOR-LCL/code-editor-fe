@@ -7,6 +7,7 @@ import { ElTabs, ElTabPane } from 'element-plus';
 import LexicalAnalysisTable from '@/components/services/lexical-analysis-table.vue';
 import SyntaticAnalysisTable from '@/components/services/syntatic-analysis-table.vue';
 import AnalisisPendingRes from '@/components/services/analisis-pending-res.vue';
+import AnalisisError from '@/components/services/analisis-error.vue';
 
 @Options({
   components: {
@@ -15,6 +16,7 @@ import AnalisisPendingRes from '@/components/services/analisis-pending-res.vue';
     LexicalAnalysisTable,
     AnalisisPendingRes,
     SyntaticAnalysisTable,
+    AnalisisError,
   },
 })
 export default class Analize extends Vue {
@@ -38,6 +40,8 @@ export default class Analize extends Vue {
       </el-tab-pane>
 
       <AnalisisPendingRes v-if="homeState.codeState === 'PENDING'" />
+
+      <AnalisisError v-else-if="homeState.codeState === 'ERROR'" />
 
       <!-- 语法分析 -->
       <el-tab-pane label="语法分析">

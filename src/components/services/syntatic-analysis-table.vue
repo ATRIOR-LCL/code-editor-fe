@@ -44,7 +44,7 @@ export default class SyntaticAnalysisTable extends Vue {
 </script>
 
 <template>
-  <header class="lc-header">
+  <header class="lc-header" v-if="codeState === 'SUCCESS'">
     <span>Symbols Table</span>
   </header>
   <el-table

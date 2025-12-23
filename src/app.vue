@@ -2,11 +2,6 @@
 import { Vue, Options } from 'vue-class-component';
 import { Provide } from 'vue-property-decorator';
 import type { HomeState } from './common/interface/data.vo';
-import {
-  lexicalAnalysisFaildRes,
-  lexicalAnalysisSuccessRes,
-  syntacticAnalysisSuccessRes,
-} from './utils';
 import { fetchLexicalData, fetchSyntacticData } from './utils/fetch-data';
 
 import Code from '@/modules/code.vue';
@@ -66,6 +61,7 @@ export default class App extends Vue {
         console.info('Lexical analysis error:', e.response.data);
         this.homeState = {
           ...this.homeState,
+          codeState: "ERROR",
           errorStates: {
             lexicalErrors: e.response.data,
           },
@@ -85,6 +81,7 @@ export default class App extends Vue {
         console.info('Syntactic analysis error:', e.response.data);
         this.homeState = {
           ...this.homeState,
+          codeState: "ERROR",
           errorStates: {
             syntaticErrors: e.response.data,
           },
@@ -143,7 +140,7 @@ export default class App extends Vue {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-top: max(70px, 0);
+  padding-top: max(50px, 0);
   gap: 10px;
 
   & .lay-main {

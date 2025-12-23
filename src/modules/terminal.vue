@@ -35,7 +35,7 @@ export default class Terminal extends Vue {
             <span>终端</span>
           </span>
         </template>
-        运行代码「Run Code」以查看终端输出结果。
+        运行代码「Run Code」以查看代码运行结果。
       </el-tab-pane>
 
       <!-- 代码编译结果 -->

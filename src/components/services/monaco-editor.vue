@@ -8,9 +8,13 @@
 import { Vue, Options } from 'vue-class-component';
 import * as monaco from 'monaco-editor';
 import { Inject } from 'vue-property-decorator';
+import { HomeState } from '@/common/interface/data.vo';
 
 @Options({})
 export default class MonacoEditor extends Vue {
+  @Inject()
+  homeState!: HomeState;
+
   @Inject()
   updateCode!: (newCode: string) => void;
 
