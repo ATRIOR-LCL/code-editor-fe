@@ -21,13 +21,12 @@ export default class AnalisisPendingRes extends Vue {}
   </div>
 </template>
 
-
 <style scoped lang="less">
 .res-container {
-    height: 100%;
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
-import { ErrorState } from '@/common/interface/data';
+import { ErrorState } from '@/common/interface/data.vo';
 import { Prop } from 'vue-property-decorator';
 
 @Options({})

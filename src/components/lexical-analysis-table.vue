@@ -1,7 +1,8 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { LexicalAnalysisState } from '@/common/interface/data';
+import { LexicalAnalysisState } from '@/common/interface/data.vo';
+import { CodeState } from '@/common/enum/data.enum';
 
 import { ElTable, ElTableColumn, ElButton, ElIcon, ElDialog, ElPopover } from 'element-plus';
 import { InfoFilled } from '@element-plus/icons-vue';
@@ -20,6 +21,9 @@ import { InfoFilled } from '@element-plus/icons-vue';
 export default class LexicalAnalysisTable extends Vue {
   @Prop({ required: true })
   lexicalAnalysisState!: LexicalAnalysisState;
+
+  @Prop({ required: true })
+  codeState!: CodeState;
 
   showDialog: boolean = false;
 
@@ -48,7 +52,7 @@ export default class LexicalAnalysisTable extends Vue {
   </header>
 
   <!-- 词法分析 token stream 表格 -->
-  <el-table v-if="lexicalAnalysisState.success" :data="lexicalAnalysisState.data" stripe="true">
+  <el-table v-if="codeState === 'SUCCESS'" :data="lexicalAnalysisState" stripe="true">
     <el-table-column prop="value" label="token" />
     <el-table-column prop="type" label="tokenType" />
   </el-table>
@@ -62,7 +66,7 @@ export default class LexicalAnalysisTable extends Vue {
     width="600px"
     title="Word Classification Table"
   >
-    <el-table :data="lexicalAnalysisState.data" stripe="true" border>
+    <el-table :data="lexicalAnalysisState" stripe="true" border>
       <el-table-column prop="value" label="Name" />
       <el-table-column prop="line" label="Kind" />
       <el-table-column prop="type" label="Type" />

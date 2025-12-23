@@ -1,0 +1,7 @@
+{
+  "error": "Syntax error at 1:1 - 1:1, near '('\n",
+  "raw_stderr": "Syntax error at 1:1 - 1:1, near '('\n",
+  "raw_stdout": "[\n]\n",
+  "returncode": 1,
+  "success": false
+}

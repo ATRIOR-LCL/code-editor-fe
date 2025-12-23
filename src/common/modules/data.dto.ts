@@ -1,3 +1,4 @@
+/** 词法分析 */
 export interface GetCodeLexicalAnalysisReqDTO {
   code: string;
 }
@@ -14,6 +15,27 @@ export interface GetCodeLexicalAnalysisResFaildDTO extends GetCodeLexicalAnalysi
   message: string;
 }
 
+/** 语法分析 */
+export interface SynaticAnalysisDTO {
+  kind: number;
+  name: string;
+  type: number;
+}
+
+export interface GetSyntacticAnalysisReqSuccessDTO {
+    level: number;
+    symbols: SynaticAnalysisDTO[];
+}
+
+export interface GetSyntacticAnalysisFaildDTO {
+  error: string;
+  raw_stderr: string;
+  raw_stdout: string;
+  returncode: number;
+  success: boolean;
+}
+
+/**通用响应结构（待调整） */
 export interface Res {
   success: boolean;
   code: number;

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
-import { HomeState } from '@/common/interface/data';
+import { HomeState } from '@/common/interface/data.vo';
 
 import { ElTabs, ElTabPane, ElIcon } from 'element-plus';
 import { Printer, Cpu } from '@element-plus/icons-vue';

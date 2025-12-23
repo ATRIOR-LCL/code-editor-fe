@@ -1,8 +1,12 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import { Provide } from 'vue-property-decorator';
-import type { HomeState } from './common/interface/data';
-import { lexicalAnalysisFaildRes, lexicalAnalysisSuccessRes } from './utils';
+import type { HomeState } from './common/interface/data.vo';
+import {
+  lexicalAnalysisFaildRes,
+  lexicalAnalysisSuccessRes,
+  syntacticAnalysisSuccessRes,
+} from './utils';
 
 import Code from '@/modules/code.vue';
 import Analize from '@/modules/analize.vue';
@@ -25,6 +29,7 @@ export default class App extends Vue {
   homeState: HomeState = {
     code: '',
     isSaved: true,
+    codeState: 'PENDING',
   };
 
   @Provide()
@@ -41,16 +46,23 @@ export default class App extends Vue {
       background: 'rgba(0, 0, 0, 0.7)',
     });
 
+    /**
+     * 模拟网络请求
+     * 成功将 codeState 改为 'SUCCESS' 并填充分析结果
+     * 失败将 codeState 改为 'FAILED' 并填充错误结果
+     * 自定义数据来自 src/utils/index.ts
+     */
     setTimeout(() => {
-      this.homeState.lexicalAnalysisState = {
-        success: true,
-        data: lexicalAnalysisSuccessRes,
+      this.homeState = {
+        ...this.homeState,
+        lexicalAnalysisState: lexicalAnalysisSuccessRes,
+        syntacticAnalysisState: syntacticAnalysisSuccessRes,
+        codeState: 'SUCCESS',
       };
-      // this.homeState.errorStates = lexicalAnalysisFaildRes;
 
       loading.close();
       console.log('Running code:', this.homeState.code);
-    }, 2000);
+    }, 1000);
   }
 
   @Provide()

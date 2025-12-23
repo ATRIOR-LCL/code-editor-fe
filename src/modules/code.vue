@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
-import { HomeState } from '@/common/interface/data';
+import { HomeState } from '@/common/interface/data.vo';
 
 import MonacoEditor from '@/components/monaco-editor.vue';
 import { ElButton, ElIcon } from 'element-plus';

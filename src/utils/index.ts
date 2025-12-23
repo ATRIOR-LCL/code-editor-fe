@@ -72,3 +72,34 @@ export const lexicalAnalysisFaildRes: GetCodeLexicalAnalysisResFaildDTO[] = [
     value: '1sdadsa',
   },
 ];
+
+export const syntacticAnalysisSuccessRes = [
+  {
+    level: 1,
+    symbols: [
+      {
+        kind: 2,
+        name: 'a',
+        type: 0,
+      },
+    ],
+  },
+  {
+    level: 0,
+    symbols: [
+      {
+        kind: 0,
+        name: 'main',
+        type: 0,
+      },
+    ],
+  },
+];
+
+export const syntacticAnalysisFaildRes = {
+  error: "Syntax error at 1:1 - 1:1, near '('\n",
+  raw_stderr: "Syntax error at 1:1 - 1:1, near '('\n",
+  raw_stdout: '[\n]\n',
+  returncode: 1,
+  success: false,
+};
