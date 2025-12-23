@@ -5,7 +5,7 @@ import { HomeState } from '@/common/interface/data.vo';
 
 import { ElTabs, ElTabPane, ElIcon } from 'element-plus';
 import { Printer, Cpu } from '@element-plus/icons-vue';
-import TerminalErrorWindow from '@/components/terminal-error-window.vue';
+import TerminalErrorWindow from '@/components/services/terminal-error-window.vue';
 
 @Options({
   components: {
@@ -46,10 +46,7 @@ export default class Terminal extends Vue {
             <span>问题</span>
           </span>
         </template>
-        <TerminalErrorWindow
-          v-if="homeState.errorStates && homeState.errorStates.length > 0"
-          :errorStates="homeState.errorStates"
-        />
+        <TerminalErrorWindow v-if="homeState.errorStates" :errorStates="homeState.errorStates" />
         <div v-else>未在工作区检测到问题。</div>
       </el-tab-pane>
     </el-tabs>

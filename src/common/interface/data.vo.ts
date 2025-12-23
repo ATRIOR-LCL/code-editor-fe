@@ -9,6 +9,7 @@ export interface LexicalAnalysisState extends GetCodeLexicalAnalysisResSuccessDT
 
 export interface SyntacticAnalysisState extends GetSyntacticAnalysisReqSuccessDTO {}
 
+
 export interface lexicalErrorState {
   line: number;
   col_start: number;

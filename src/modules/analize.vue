@@ -5,9 +5,9 @@ import { HomeState } from '@/common/interface/data.vo';
 import { CodeState } from '@/common/enum/data.enum';
 
 import { ElTabs, ElTabPane } from 'element-plus';
-import LexicalAnalysisTable from '@/components/lexical-analysis-table.vue';
-import SyntaticAnalysisTable from '@/components/syntatic-analysis-table.vue';
-import AnalisisPendingRes from '@/components/analisis-pending-res.vue';
+import LexicalAnalysisTable from '@/components/services/lexical-analysis-table.vue';
+import SyntaticAnalysisTable from '@/components/services/syntatic-analysis-table.vue';
+import AnalisisPendingRes from '@/components/services/analisis-pending-res.vue';
 
 @Options({
   components: {

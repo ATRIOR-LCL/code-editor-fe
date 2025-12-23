@@ -3,7 +3,7 @@ import { Vue, Options } from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
 import { HomeState } from '@/common/interface/data.vo';
 
-import MonacoEditor from '@/components/monaco-editor.vue';
+import MonacoEditor from '@/components/services/monaco-editor.vue';
 import { ElButton, ElIcon } from 'element-plus';
 import { Check, Stopwatch } from '@element-plus/icons-vue';
 

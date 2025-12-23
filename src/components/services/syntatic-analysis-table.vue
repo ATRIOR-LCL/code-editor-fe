@@ -1,9 +1,8 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
-import { Inject, Prop } from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
 import { SyntacticAnalysisState } from '@/common/interface/data.vo';
-import { GetSyntacticAnalysisReqSuccessDTO } from '@/common/modules/data.dto';
-import { CodeState } from '@/common/enum/data.enum';
+import { CodeState, SymbolLabel, TypeLabel } from '@/common/enum/data.enum';
 
 import { ElTable, ElTableColumn } from 'element-plus';
 
@@ -19,10 +18,35 @@ export default class SyntaticAnalysisTable extends Vue {
 
   @Prop({ required: true })
   codeState!: CodeState;
+
+  parseKind(kind: number): SymbolLabel {
+    switch (kind) {
+      case 0:
+        return 'func';
+      case 1:
+        return 'var';
+      case 2:
+        return 'param';
+      default:
+        return 'unknown';
+    }
+  }
+
+  parseType(type: number): TypeLabel {
+    switch (type) {
+      case 0:
+        return 'int';
+      default:
+        return 'unknown';
+    }
+  }
 }
 </script>
 
 <template>
+  <header class="lc-header">
+    <span>Symbols Table</span>
+  </header>
   <el-table
     v-if="codeState === 'SUCCESS'"
     :data="syntacticAnalysisState"
@@ -32,9 +56,9 @@ export default class SyntaticAnalysisTable extends Vue {
     <el-table-column type="expand">
       <template #default="props">
         <el-table :data="props.row.symbols">
-          <el-table-column label="Kind" prop="kind" />
+          <el-table-column label="Kind" :formatter="(row) => parseKind(row.kind)" />
           <el-table-column label="Name" prop="name" />
-          <el-table-column label="Type" prop="type" />
+          <el-table-column label="Type" :formatter="(row) => parseType(row.type)" />
         </el-table>
       </template>
     </el-table-column>
@@ -42,4 +66,12 @@ export default class SyntaticAnalysisTable extends Vue {
   </el-table>
 </template>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.lc-header {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
