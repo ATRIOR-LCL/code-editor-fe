@@ -1,42 +1,42 @@
 # code-editor-fe
+> 编译原理课程设计项目客户端
 
-This template should help get you started developing with Vue 3 in Vite.
+简易代码编辑器：
+- 代码编辑
+- 编译过程分析（编译器运行的五个阶段）
+- 简易终端
 
-## Recommended IDE Setup
+后端程序：
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+https://github.com/coolarec/aclang
 
-## Recommended Browser Setup
+## 技术栈
+- vue 3.2
+- monaco-editor
+- vue-class-component
+- vue-property-decorator
+- vite
+- typescript
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## 环境需求
+### node 解释器环境
+- nodeJS >= 22
+- pnpm >= 8
 
-## Type Support for `.vue` Imports in TS
+### 集成 IDE
+- VS Code
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+## 快速开始
+### 安装依赖
+```bash
+pnpm i
 ```
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
+### 启动本地开发
+```bash
+pnpm dev
 ```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
+浏览器访问项目运行端口
+```
+http://localhost:5173
 ```
