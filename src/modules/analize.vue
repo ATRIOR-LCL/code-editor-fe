@@ -9,6 +9,7 @@ import SyntaticAnalysisTable from '@/components/services/syntatic-analysis-table
 import AnalisisPendingRes from '@/components/services/analisis-pending-res.vue';
 import AnalisisError from '@/components/services/analisis-error.vue';
 import SemanticIntermediateCode from '@/components/services/semantic-intermediate-code.vue';
+import SyntaticTree from '@/components/services/syntatic-tree.vue';
 
 @Options({
   components: {
@@ -19,6 +20,7 @@ import SemanticIntermediateCode from '@/components/services/semantic-intermediat
     SyntaticAnalysisTable,
     AnalisisError,
     SemanticIntermediateCode,
+    SyntaticTree,
   },
 })
 export default class Analize extends Vue {
@@ -33,9 +35,9 @@ export default class Analize extends Vue {
   <div class="analize-container">
     <!-- 词法分析 -->
     <el-tabs class="demo-tabs">
-      <el-tab-pane label="词法分析" class="pane-container">
+      <el-tab-pane label="词法分析" >
         <LexicalAnalysisTable
-        v-if="homeState.lexicalAnalysisState"
+          v-if="homeState.lexicalAnalysisState"
           :lexicalAnalysisState="homeState.lexicalAnalysisState"
           :codeState="homeState.codeState"
         />
@@ -46,7 +48,7 @@ export default class Analize extends Vue {
       <AnalisisError v-else-if="homeState.codeState === 'ERROR'" />
 
       <!-- 语法分析 -->
-      <el-tab-pane label="语法分析" >
+      <el-tab-pane label="语法分析">
         <SyntaticAnalysisTable
           v-if="homeState.syntacticAnalysisState"
           :syntacticAnalysisState="homeState.syntacticAnalysisState"
@@ -55,7 +57,7 @@ export default class Analize extends Vue {
       </el-tab-pane>
 
       <!-- 语义分析 -->
-      <el-tab-pane label="语义分析 & 中间代码生成" class="pane-container">
+      <el-tab-pane label="语义分析 & 中间代码生成" >
         <SemanticIntermediateCode
           v-if="homeState.semanticAndIntermediateCodeState"
           :semanticAndIntermediateCodeState="homeState.semanticAndIntermediateCodeState"
@@ -63,7 +65,9 @@ export default class Analize extends Vue {
       </el-tab-pane>
 
       <!-- 目标代码生成 -->
-      <el-tab-pane label="目标代码生成">目标代码生成</el-tab-pane>
+      <el-tab-pane label="目标代码生成" class="pane-container">
+        <SyntaticTree />
+      </el-tab-pane>
 
       <!-- 代码优化 -->
       <el-tab-pane label="代码优化">代码优化</el-tab-pane>
@@ -81,6 +85,7 @@ export default class Analize extends Vue {
   position: relative;
 
   &::before {
+    
     content: 'Analyzing Here';
     display: block;
     position: absolute;
@@ -102,5 +107,13 @@ export default class Analize extends Vue {
   color: #6b778c;
   font-size: 32px;
   font-weight: 600;
+}
+
+.pane-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
 </style>

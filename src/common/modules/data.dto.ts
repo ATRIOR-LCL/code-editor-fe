@@ -35,6 +35,7 @@ export interface GetSyntacticAnalysisFaildDTO {
   success: boolean;
 }
 
+/** 语义分析 */
 export interface GetSemanticAndIntermediateCodeReqDTO {
   code: string;
 }
@@ -46,4 +47,16 @@ export interface GetSemanticAndIntermediateCodeResDTO {
       main: Array<Array<string>>;
     };
   };
+}
+
+/** 目标代码生成 */
+export interface GetSyntaticTreeReqDTO {
+  code: string;
+}
+
+export interface GetSyntaticTreeResDTO {
+  type: string;
+  name: string;
+  value: string;
+  son: Array<GetSyntaticTreeResDTO>;
 }

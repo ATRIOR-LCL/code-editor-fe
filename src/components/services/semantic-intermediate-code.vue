@@ -22,24 +22,36 @@ export default class SemanticIntermediateCode extends Vue {
 
 <template>
   <div class="si-container">
-    <el-card class="card">
-      <template #header>
-        <span>Pcode</span>
-      </template>
-      <p v-for="(item, index) in semanticAndIntermediateCodeState.pcode" style="margin-bottom: 5px;" :key="index">
-        {{ item }}
-      </p>
-    </el-card>
-
-    <el-card class="card">
-      <template #header>
-        <span>quads</span>
-      </template>
-      <!-- <p>此处展示中间代码生成结果。</p> -->
-       <p v-for="(item, index) in semanticAndIntermediateCodeState.quads.functions.main" :key="index" style="margin-bottom: 5px;">
-        {{ parseQuads(item[0], item[1], item[2], item[3]) }}
+    <div class="card-container">
+      <el-card class="card">
+        <template #header>
+          <span>Pcode</span>
+        </template>
+        <p
+          v-for="(item, index) in semanticAndIntermediateCodeState.pcode"
+          style="margin-bottom: 5px"
+          :key="index"
+        >
+          {{ item }}
         </p>
-    </el-card>
+      </el-card>
+    </div>
+
+    <div class="card-container">
+      <el-card class="card">
+        <template #header>
+          <span>quads</span>
+        </template>
+        <!-- <p>此处展示中间代码生成结果。</p> -->
+        <p
+          v-for="(item, index) in semanticAndIntermediateCodeState.quads.functions.main"
+          :key="index"
+          style="margin-bottom: 5px"
+        >
+          {{ parseQuads(item[0], item[1], item[2], item[3]) }}
+        </p>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -48,11 +60,19 @@ export default class SemanticIntermediateCode extends Vue {
   width: 100%;
   height: 100%;
   display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .card-container {
+    width: 45%;
+    height: 550px;
+    overflow-y: auto;
+    padding-bottom: 30px;
+  }
 
   & .card {
-    width: 45%;
-    height: 600px;
-    min-height: 600px;
+    width: 100%;
+    height: auto;
   }
 }
 </style>

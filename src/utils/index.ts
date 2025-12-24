@@ -103,3 +103,31 @@ export const syntacticAnalysisFaildRes = {
   returncode: 1,
   success: false,
 };
+
+let WordClassTokens = {
+  T_And: '逻辑与运算符',
+  T_Break: '跳出循环',
+  T_Continue: '跳过本次循环',
+  T_Else: '条件分支 else',
+  T_Eq: '等于比较运算符',
+  T_Explain: '注释或说明关键字',
+  T_Ge: '大于等于运算符',
+  T_Identifier: '标识符（变量名或函数名）',
+  T_If: '条件判断 if',
+  T_Int: '整型类型',
+  T_IntConstant: '整型常量',
+  T_Le: '小于等于运算符',
+  T_Ne: '不等于比较运算符',
+  T_Or: '逻辑或运算符',
+  T_Power: '幂运算函数',
+  T_Return: '函数返回语句',
+  T_Void: '空类型',
+  T_While: 'while 循环语句',
+  T_inputInt: '输入整数函数',
+  T_outputInt: '输出整数函数',
+};
+
+export const WordClassArray = Object.entries(WordClassTokens).map(([key, value]) => ({
+  key,
+  value,
+}));

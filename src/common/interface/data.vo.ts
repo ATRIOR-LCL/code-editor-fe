@@ -22,6 +22,7 @@ export interface lexicalErrorState {
 
 export interface SyntaticErrorState extends GetSyntacticAnalysisFaildDTO {}
 
+
 export interface HomeState {
   code: string; // 代码内容
   isSaved: boolean; // 代码是否保存

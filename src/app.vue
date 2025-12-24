@@ -45,7 +45,7 @@ export default class App extends Vue {
   @Provide()
   async saveCode(): Promise<void> {
     /** 初始化代码状态  */
-    this.homeState.isSaved = true;
+    this.homeState.isSaved = true;  
     this.homeState.errorStates = undefined;
 
     Cookies.set('code', this.homeState.code);
