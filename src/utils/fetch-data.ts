@@ -30,3 +30,7 @@ export const fetchSyntacticData = async (code: string) => {
 export const fetchSemanticAndIntermediateCodeData = async (code: string) => {
   return fetchData('pcode', code);
 };
+
+export const fetchSyntaticTreeData = async (code: string) => {
+  return fetchData('ast', code);
+}

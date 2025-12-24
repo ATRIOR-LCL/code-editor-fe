@@ -6,6 +6,7 @@ import {
   fetchLexicalData,
   fetchSyntacticData,
   fetchSemanticAndIntermediateCodeData,
+  fetchSyntaticTreeData,
 } from './utils/fetch-data';
 import Cookies from 'js-cookie';
 
@@ -109,6 +110,19 @@ export default class App extends Vue {
         };
       } catch (e) {
         console.info('Semantic analysis error:', e.response.data);
+        return;
+      }
+
+      /** Syntactic Tree Generation */
+      try {
+        const fetchSyntaticTreeRes = await fetchSyntaticTreeData(this.homeState.code);
+        console.info('Fetched syntactic tree result:', fetchSyntaticTreeRes.data);
+        this.homeState = {
+          ...this.homeState,
+          syntaticTreeState: fetchSyntaticTreeRes.data,
+        };
+      } catch (e) {
+        console.info('Syntactic tree generation error:', e.response.data);
         return;
       }
 

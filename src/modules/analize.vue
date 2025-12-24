@@ -64,13 +64,13 @@ export default class Analize extends Vue {
         />
       </el-tab-pane>
 
-      <!-- 目标代码生成 -->
-      <el-tab-pane label="目标代码生成" class="pane-container">
-        <SyntaticTree />
+      <!-- 代码优化 -->
+      <el-tab-pane label="代码优化" class="pane-container">
+        <SyntaticTree v-if="homeState.syntaticTreeState" :testData="homeState.syntaticTreeState" />
       </el-tab-pane>
 
-      <!-- 代码优化 -->
-      <el-tab-pane label="代码优化">代码优化</el-tab-pane>
+      <!-- 目标代码生成 -->
+      <el-tab-pane label="目标代码生成">目标代码生成</el-tab-pane>
     </el-tabs>
   </div>
 </template>
