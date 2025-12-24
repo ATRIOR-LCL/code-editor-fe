@@ -2,7 +2,12 @@
 import { Vue, Options } from 'vue-class-component';
 import { Provide } from 'vue-property-decorator';
 import type { HomeState } from './common/interface/data.vo';
-import { fetchLexicalData, fetchSyntacticData } from './utils/fetch-data';
+import {
+  fetchLexicalData,
+  fetchSyntacticData,
+  fetchSemanticAndIntermediateCodeData,
+} from './utils/fetch-data';
+import Cookies from 'js-cookie';
 
 import Code from '@/modules/code.vue';
 import Analize from '@/modules/analize.vue';
@@ -39,8 +44,11 @@ export default class App extends Vue {
 
   @Provide()
   async saveCode(): Promise<void> {
+    /** 初始化代码状态  */
     this.homeState.isSaved = true;
     this.homeState.errorStates = undefined;
+
+    Cookies.set('code', this.homeState.code);
 
     const loading = ElLoading.service({
       lock: true,
@@ -49,10 +57,10 @@ export default class App extends Vue {
     });
 
     try {
-      // Lexical Analysis
+      /** Lexical Analysis */
       try {
         const fetchLexicalRes = await fetchLexicalData(this.homeState.code);
-        console.log('Fetched lexical analysis result:', fetchLexicalRes);
+        console.info('Fetched lexical analysis result:', fetchLexicalRes);
         this.homeState = {
           ...this.homeState,
           lexicalAnalysisState: fetchLexicalRes.data,
@@ -61,7 +69,7 @@ export default class App extends Vue {
         console.info('Lexical analysis error:', e.response.data);
         this.homeState = {
           ...this.homeState,
-          codeState: "ERROR",
+          codeState: 'ERROR',
           errorStates: {
             lexicalErrors: e.response.data,
           },
@@ -69,10 +77,10 @@ export default class App extends Vue {
         return;
       }
 
-      // Synatic Analysis
+      /** Syntactic Analysis */
       try {
         const fetchSyntacticRes = await fetchSyntacticData(this.homeState.code);
-        console.log('Fetched syntactic analysis result:', fetchSyntacticRes);
+        console.info('Fetched syntactic analysis result:', fetchSyntacticRes);
         this.homeState = {
           ...this.homeState,
           syntacticAnalysisState: fetchSyntacticRes.data,
@@ -81,11 +89,26 @@ export default class App extends Vue {
         console.info('Syntactic analysis error:', e.response.data);
         this.homeState = {
           ...this.homeState,
-          codeState: "ERROR",
+          codeState: 'ERROR',
           errorStates: {
             syntaticErrors: e.response.data,
           },
         };
+        return;
+      }
+
+      /** Semantic Analysis and Intermediate Code Generation */
+      try {
+        const fetchSemanticRes = await fetchSemanticAndIntermediateCodeData(this.homeState.code);
+        this.homeState = {
+          ...this.homeState,
+          semanticAndIntermediateCodeState: {
+            pcode: fetchSemanticRes.pcode,
+            quads: fetchSemanticRes.quads,
+          },
+        };
+      } catch (e) {
+        console.info('Semantic analysis error:', e.response.data);
         return;
       }
 
@@ -104,7 +127,11 @@ export default class App extends Vue {
   }
 
   mounted(): void {
-    console.log('App mounted');
+    const savedCode = Cookies.get('code') || '';
+    if (savedCode.length) {
+      this.updateCode(savedCode);
+      this.saveCode();
+    }
   }
 }
 </script>

@@ -52,7 +52,7 @@ export default class LexicalAnalysisTable extends Vue {
   </header>
 
   <!-- 词法分析 token stream 表格 -->
-  <el-table v-if="codeState === 'SUCCESS'" :data="lexicalAnalysisState" :stripe="true">
+  <el-table v-if="codeState === 'SUCCESS'" :data="lexicalAnalysisState" :stripe="true" height="600">
     <el-table-column prop="value" label="token" />
     <el-table-column prop="type" label="tokenType" />
   </el-table>

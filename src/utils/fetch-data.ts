@@ -26,3 +26,7 @@ export const fetchLexicalData = async (code: string) => {
 export const fetchSyntacticData = async (code: string) => {
   return fetchData('symbol_table', code);
 };
+
+export const fetchSemanticAndIntermediateCodeData = async (code: string) => {
+  return fetchData('pcode', code);
+};

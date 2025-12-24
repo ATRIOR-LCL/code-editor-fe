@@ -8,6 +8,7 @@ import LexicalAnalysisTable from '@/components/services/lexical-analysis-table.v
 import SyntaticAnalysisTable from '@/components/services/syntatic-analysis-table.vue';
 import AnalisisPendingRes from '@/components/services/analisis-pending-res.vue';
 import AnalisisError from '@/components/services/analisis-error.vue';
+import SemanticIntermediateCode from '@/components/services/semantic-intermediate-code.vue';
 
 @Options({
   components: {
@@ -17,6 +18,7 @@ import AnalisisError from '@/components/services/analisis-error.vue';
     AnalisisPendingRes,
     SyntaticAnalysisTable,
     AnalisisError,
+    SemanticIntermediateCode,
   },
 })
 export default class Analize extends Vue {
@@ -31,7 +33,7 @@ export default class Analize extends Vue {
   <div class="analize-container">
     <!-- 词法分析 -->
     <el-tabs class="demo-tabs">
-      <el-tab-pane label="词法分析">
+      <el-tab-pane label="词法分析" class="pane-container">
         <LexicalAnalysisTable
         v-if="homeState.lexicalAnalysisState"
           :lexicalAnalysisState="homeState.lexicalAnalysisState"
@@ -44,7 +46,7 @@ export default class Analize extends Vue {
       <AnalisisError v-else-if="homeState.codeState === 'ERROR'" />
 
       <!-- 语法分析 -->
-      <el-tab-pane label="语法分析">
+      <el-tab-pane label="语法分析" >
         <SyntaticAnalysisTable
           v-if="homeState.syntacticAnalysisState"
           :syntacticAnalysisState="homeState.syntacticAnalysisState"
@@ -53,7 +55,12 @@ export default class Analize extends Vue {
       </el-tab-pane>
 
       <!-- 语义分析 -->
-      <el-tab-pane label="语义分析 & 中间代码生成">语义分析 & 中间代码生成</el-tab-pane>
+      <el-tab-pane label="语义分析 & 中间代码生成" class="pane-container">
+        <SemanticIntermediateCode
+          v-if="homeState.semanticAndIntermediateCodeState"
+          :semanticAndIntermediateCodeState="homeState.semanticAndIntermediateCodeState"
+        />
+      </el-tab-pane>
 
       <!-- 目标代码生成 -->
       <el-tab-pane label="目标代码生成">目标代码生成</el-tab-pane>
@@ -88,6 +95,7 @@ export default class Analize extends Vue {
   height: 100%;
   border-radius: var(--br-size);
   background-color: var(--card-bg-color);
+  overflow-y: auto;
 }
 
 .demo-tabs > .el-tabs__content {

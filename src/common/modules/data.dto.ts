@@ -23,8 +23,8 @@ export interface SynaticAnalysisDTO {
 }
 
 export interface GetSyntacticAnalysisReqSuccessDTO {
-    level: number;
-    symbols: SynaticAnalysisDTO[];
+  level: number;
+  symbols: SynaticAnalysisDTO[];
 }
 
 export interface GetSyntacticAnalysisFaildDTO {
@@ -35,9 +35,15 @@ export interface GetSyntacticAnalysisFaildDTO {
   success: boolean;
 }
 
-/**通用响应结构（待调整） */
-export interface Res {
-  success: boolean;
-  code: number;
-  data: (GetCodeLexicalAnalysisResSuccessDTO | GetCodeLexicalAnalysisResFaildDTO)[];
+export interface GetSemanticAndIntermediateCodeReqDTO {
+  code: string;
+}
+
+export interface GetSemanticAndIntermediateCodeResDTO {
+  pcode: Array<string>;
+  quads: {
+    functions: {
+      main: Array<Array<string>>;
+    };
+  };
 }

@@ -16,6 +16,7 @@
     "@element-plus/icons-vue": "^2.3.2",
     "axios": "^1.13.2",
     "element-plus": "^2.13.0",
+    "js-cookie": "^3.0.5",
     "monaco-editor": "^0.55.1",
     "vue": "^3.2.31",
     "vue-class-component": "^8.0.0-rc.1",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.3",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vue/tsconfig": "^0.8.1",

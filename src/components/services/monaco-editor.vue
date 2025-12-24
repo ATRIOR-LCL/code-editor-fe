@@ -9,6 +9,7 @@ import { Vue, Options } from 'vue-class-component';
 import * as monaco from 'monaco-editor';
 import { Inject } from 'vue-property-decorator';
 import { HomeState } from '@/common/interface/data.vo';
+import Cookies from 'js-cookie';
 
 @Options({})
 export default class MonacoEditor extends Vue {
@@ -32,7 +33,7 @@ export default class MonacoEditor extends Vue {
       });
 
       const editor = monaco.editor.create(el, {
-        value: '',
+        value: this.homeState.code,
         language: 'cpp',
         fontSize: 16,
         theme: 'myTheme',

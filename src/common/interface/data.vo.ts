@@ -2,6 +2,7 @@ import {
   GetCodeLexicalAnalysisResSuccessDTO,
   GetSyntacticAnalysisFaildDTO,
   GetSyntacticAnalysisReqSuccessDTO,
+  GetSemanticAndIntermediateCodeResDTO
 } from '../modules/data.dto';
 import { CodeState } from '../enum/data.enum';
 
@@ -9,6 +10,7 @@ export interface LexicalAnalysisState extends GetCodeLexicalAnalysisResSuccessDT
 
 export interface SyntacticAnalysisState extends GetSyntacticAnalysisReqSuccessDTO {}
 
+export interface SemanticAndIntermediateCodeState extends GetSemanticAndIntermediateCodeResDTO {}
 
 export interface lexicalErrorState {
   line: number;
@@ -26,6 +28,7 @@ export interface HomeState {
   codeState: CodeState; // 代码状态
   lexicalAnalysisState?: LexicalAnalysisState[]; // 词法分析结果
   syntacticAnalysisState?: SyntacticAnalysisState[]; // 语法分析结果
+  semanticAndIntermediateCodeState?: SemanticAndIntermediateCodeState; // 语义分析及中间代码s生成结果
   errorStates?: {
     // 错误信息
     lexicalErrors?: lexicalErrorState[]; // 词法错误信息
