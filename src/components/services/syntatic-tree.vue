@@ -4,105 +4,196 @@ import * as echarts from 'echarts';
 import { Prop } from 'vue-property-decorator';
 type EChartsOption = echarts.EChartsOption;
 import { SyntaticTreeState } from '@/common/interface/data.vo';
-import { toRaw } from 'vue';
+import { CodeState } from '@/common/enum/data.enum';
+import { ElButton } from 'element-plus';
 
-@Options({})
+@Options({
+  components: {
+    ElButton,
+  },
+})
 export default class SyntaticTree extends Vue {
   @Prop({ required: true })
   testData!: SyntaticTreeState;
-  chartDOM: HTMLElement | null = null;
-  myChart: echarts.ECharts | null = null;
-  option: EChartsOption | null = null;
 
-  async mounted(): Promise<void> {
-    console.log('Syntactic tree data:', toRaw(this.testData));
-    await this.$nextTick();
+  @Prop({ required: true })
+  codeState!: CodeState;
 
-    this.option = {
-      title: {
-        text: 'Syntactic Tree',
-      },
-      tooltip: {},
-      animationDurationUpdate: 1500,
-      animationEasingUpdate: 'quinticInOut',
-      series: [
-        {
-          type: 'graph',
-          layout: 'none',
-          width: '100%',
-          symbolSize: 50,
-          roam: true,
-          label: {
-            show: true,
-          },
-          edgeSymbol: ['circle', 'arrow'],
-          edgeSymbolSize: [4, 10],
-          edgeLabel: {
-            fontSize: 20,
-          },
-          data: this.seriesData,
-          links: this.seriesLinks,
-          lineStyle: {
-            opacity: 0.9,
-            width: 2,
-            curveness: 0,
-          },
-        },
-      ],
-    };
-    this.chartDOM = document.getElementById('main')!;
-    this.myChart = echarts.init(this.chartDOM, 'dark');
-    this.myChart.setOption(this.option);
-    this.myChart.resize();
+  private chartDOM: HTMLElement;
+  private myChart: echarts.ECharts | null = null;
+  private option: EChartsOption | null = null;
+  private showModal = false;
+
+  fullscreen() {
+    this.showModal = true;
+    this.$nextTick(() => {
+      // 重新初始化大画布
+      const modalChart = this.$refs.modalChartRef as HTMLElement;
+      if (modalChart) {
+        const option = this.option;
+        const modalEchart = echarts.init(modalChart, 'dark');
+        modalEchart.setOption(option!);
+        modalEchart.resize();
+        // 关闭时销毁
+        (this as any)._modalEchart = modalEchart;
+      }
+    });
   }
 
-  get seriesData(): Array<{ name: string; x: number; y: number }> {
-    const data: Array<{ name: string; x: number; y: number }> = [];
-    const levelMap: Record<number, number> = {};
-    const traverse = (node: SyntaticTreeState, level: number) => {
-      if (!levelMap[level]) levelMap[level] = 0;
-      const x = levelMap[level] * 250;
-      const y = level * 100;
-      data.push({
-        name: node.name ? `${node.type}:${node.name}` : node.type,
-        x,
-        y,
-      });
-      levelMap[level]++;
-      if (node.son && node.son.length > 0) {
-        node.son.forEach((child) => traverse(child, level + 1));
-      }
-    };
-    traverse(toRaw(this.testData), 0);
-    return data;
+  closeModal() {
+    this.showModal = false;
+    // 销毁模态图表实例
+    if ((this as any)._modalEchart) {
+      (this as any)._modalEchart.dispose();
+      (this as any)._modalEchart = null;
+    }
   }
 
-  get seriesLinks(): Array<{ source: string; target: string }> {
-    const links: Array<{ source: string; target: string }> = [];
-    const traverse = (node: SyntaticTreeState) => {
-      if (node.son && node.son.length > 0) {
-        node.son.forEach((child) => {
-          links.push({
-            source: node.name ? `${node.type}:${node.name}` : node.type,
-            target: child.name ? `${child.type}:${child.name}` : child.type,
-          });
-          traverse(child);
-        });
-      }
+  mounted(): void {
+    console.log('Syntactic tree data:', this.testData);
+    this.$nextTick(() => {
+      this.option = {
+        tooltip: {},
+        series: [
+          {
+            type: 'tree',
+            data: [this.treeData],
+            top: '5%',
+            left: '10%',
+            bottom: '5%',
+            right: '10%',
+            symbolSize: 50,
+            orient: 'TB',
+            layout: 'orthogonal',
+            label: {
+              position: 'top',
+              verticalAlign: 'middle',
+              align: 'center',
+              fontSize: 14,
+              formatter: function (params) {
+                if (typeof params.data === 'object' && params.data && 'name' in params.data) {
+                  return (params.data as any).name;
+                }
+                return '';
+              },
+            },
+            lineStyle: {
+              color: '#fff',
+              width: 2,
+            },
+            leaves: {
+              label: {
+                position: 'bottom',
+                align: 'center',
+              },
+            },
+            expandAndCollapse: true,
+            initialTreeDepth: -1,
+            roam: true,
+            animationDuration: 550,
+            animationDurationUpdate: 750,
+          },
+        ],
+      };
+      this.chartDOM = this.$refs.chartRef as HTMLElement;
+      this.myChart = echarts.init(this.chartDOM, 'dark');
+      this.myChart.setOption(this.option);
+      this.myChart.resize();
+    });
+  }
+
+  get treeData() {
+    // 递归转换为 ECharts tree 需要的数据结构，name/type/value 都展示，且 name 允许为 null
+    const convert = (node: any) => {
+      let label = node.type || '';
+      if (node.name !== undefined && node.name !== null) label += `\n${node.name}`;
+      if (node.value !== undefined && node.value !== null) label += `\n${node.value}`;
+      return {
+        name: label,
+        children: Array.isArray(node.son) ? node.son.map(convert) : [],
+      };
     };
-    traverse(toRaw(this.testData));
-    return links;
+    // 兼容 testData 可能是 { data: ... }
+    const root = this.testData;
+    return convert(root);
   }
 }
 </script>
 
 <template>
-  <div class="tree-container" id="main"></div>
+  <div style="position: relative">
+    <header class="lc-header" v-if="codeState === 'SUCCESS'">
+      <span>Syntactic Tree</span>
+      <el-button @click="fullscreen" size="small">全屏</el-button>
+    </header>
+    <div class="tree-container" id="main" ref="chartRef"></div>
+    <div v-if="showModal" class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <el-button class="modal-close" size="small" @click="closeModal">关闭</el-button>
+          <div class="modal-echart" ref="modalChartRef"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="less">
 .tree-container {
   width: 600px;
   height: 600px;
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-wrapper {
+  width: 90vw;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-container {
+  background: #222;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.modal-close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 10;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+.modal-echart {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.lc-header {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

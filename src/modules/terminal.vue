@@ -3,7 +3,7 @@ import { Vue, Options } from 'vue-class-component';
 import { Inject } from 'vue-property-decorator';
 import { HomeState } from '@/common/interface/data.vo';
 
-import { ElTabs, ElTabPane, ElIcon } from 'element-plus';
+import { ElTabs, ElTabPane, ElIcon, ElInput } from 'element-plus';
 import { Printer, Cpu } from '@element-plus/icons-vue';
 import TerminalErrorWindow from '@/components/services/terminal-error-window.vue';
 
@@ -15,11 +15,15 @@ import TerminalErrorWindow from '@/components/services/terminal-error-window.vue
     Printer,
     Cpu,
     TerminalErrorWindow,
+    ElInput,
   },
 })
 export default class Terminal extends Vue {
   @Inject()
   homeState!: HomeState;
+
+  @Inject()
+  runCode!: () => void;
 }
 </script>
 
@@ -35,7 +39,13 @@ export default class Terminal extends Vue {
             <span>终端</span>
           </span>
         </template>
-        运行代码「Run Code」以查看代码运行结果。
+        <el-input
+          v-if="homeState.hasInput && !homeState.terminalResult"
+          v-model="homeState.userInput"
+          @keyup.enter="runCode"
+        />
+        <div v-if="homeState?.terminalResult">{{ homeState.terminalResult }}</div>
+        <span v-if="!homeState.hasInput"> 运行代码「Run Code」以查看代码运行结果。 </span>
       </el-tab-pane>
 
       <!-- 代码编译结果 -->

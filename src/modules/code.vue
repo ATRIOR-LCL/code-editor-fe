@@ -23,7 +23,7 @@ export default class Code extends Vue {
   saveCode!: () => void;
 
   @Inject()
-  runCode!: () => void;
+  toRunCode!: () => void;
 }
 </script>
 
@@ -36,8 +36,14 @@ export default class Code extends Vue {
         Save
       </el-button>
 
-      <el-button type="primary" size="small" @click="runCode">
-        <el-icon size="large" style="margin-right: 5px"><Stopwatch /></el-icon> Run Code</el-button
+      <el-button type="primary" size="small" @click="toRunCode">
+        <el-icon
+          size="large"
+          style="margin-right: 5px"
+          :disabled="homeState.isSaved && homeState.codeState === 'SUCCESS'"
+          ><Stopwatch
+        /></el-icon>
+        Run Code</el-button
       >
     </div>
 

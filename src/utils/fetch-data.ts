@@ -34,3 +34,7 @@ export const fetchSemanticAndIntermediateCodeData = async (code: string) => {
 export const fetchSyntaticTreeData = async (code: string) => {
   return fetchData('ast', code);
 }
+
+export const fetchAsmCodeData = async (code: string) => {
+  return fetchData('asm', code);
+}

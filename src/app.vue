@@ -7,6 +7,7 @@ import {
   fetchSyntacticData,
   fetchSemanticAndIntermediateCodeData,
   fetchSyntaticTreeData,
+  fetchAsmCodeData,
 } from './utils/fetch-data';
 import Cookies from 'js-cookie';
 
@@ -31,6 +32,8 @@ export default class App extends Vue {
   homeState: HomeState = {
     code: '',
     isSaved: true,
+    hasInput: false,
+    userInput: '',
     codeState: 'PENDING',
   };
 
@@ -41,12 +44,20 @@ export default class App extends Vue {
   }
 
   @Provide()
-  async runCode(): Promise<void> {}
+  toRunCode() {
+    this.checkHasInput();
+  }
+
+  @Provide()
+  async runCode(): Promise<void> {
+    this.homeState.terminalResult = '10';
+    console.info('User input received:', this.homeState.userInput);
+  }
 
   @Provide()
   async saveCode(): Promise<void> {
     /** 初始化代码状态  */
-    this.homeState.isSaved = true;  
+    this.homeState.isSaved = true;
     this.homeState.errorStates = undefined;
 
     Cookies.set('code', this.homeState.code);
@@ -126,6 +137,19 @@ export default class App extends Vue {
         return;
       }
 
+      /** Asm Code Generation */
+      try {
+        const fetchAsmCodeRes = await fetchAsmCodeData(this.homeState.code);
+        console.info('Fetched asm code result:', fetchAsmCodeRes.data);
+        this.homeState = {
+          ...this.homeState,
+          asmCodeState: fetchAsmCodeRes.data,
+        };
+      } catch (e) {
+        console.info('Asm code generation error:', e.response.data);
+        return;
+      }
+
       this.homeState = {
         ...this.homeState,
         codeState: 'SUCCESS',
@@ -138,6 +162,10 @@ export default class App extends Vue {
     } finally {
       loading.close();
     }
+  }
+
+  private checkHasInput(): void {
+    this.homeState.hasInput = this.homeState.code.includes('inputInt()');
   }
 
   mounted(): void {
