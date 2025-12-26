@@ -49,6 +49,21 @@ export interface GetSemanticAndIntermediateCodeResDTO {
   };
 }
 
+export interface GetOptimizedAsmCodeReqDTO {
+  asm: string;
+}
+
+export interface GetOptimizedAsmCodeResDTO {
+  optimized_asm: string;
+  stats: {
+    optimized: number;
+    original: number;
+    passes: number;
+    reduction: number;
+  };
+  success: boolean;
+}
+
 /** 目标代码生成 */
 export interface GetSyntaticTreeReqDTO {
   code: string;

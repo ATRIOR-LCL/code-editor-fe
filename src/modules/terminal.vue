@@ -43,7 +43,10 @@ export default class Terminal extends Vue {
           v-if="homeState.hasInput && !homeState.terminalResult"
           v-model="homeState.userInput"
           @keyup.enter="runCode"
-        />
+        style="width: 400px;"
+        >
+          <template #prepend>$</template>
+      </el-input>
         <div v-if="homeState?.terminalResult">{{ homeState.terminalResult }}</div>
         <span v-if="!homeState.hasInput"> 运行代码「Run Code」以查看代码运行结果。 </span>
       </el-tab-pane>

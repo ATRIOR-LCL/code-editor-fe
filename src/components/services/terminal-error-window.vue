@@ -20,5 +20,5 @@ export default class TerminalErrorWindow extends Vue {
 
 <template>
   <LexicalError v-if="errorStates?.lexicalErrors" :lexicalErrors="errorStates.lexicalErrors" />
-  <SyntaticError v-if="errorStates?.syntaticErrors" :synaticErrors="errorStates.syntaticErrors" />
+  <SyntaticError v-if="errorStates?.error" :error="errorStates.error" />
 </template>

@@ -8,6 +8,8 @@ import {
   fetchSemanticAndIntermediateCodeData,
   fetchSyntaticTreeData,
   fetchAsmCodeData,
+  fetchRunCodeData,
+  fetchOptimizedAsmCodeData,
 } from './utils/fetch-data';
 import Cookies from 'js-cookie';
 
@@ -41,17 +43,39 @@ export default class App extends Vue {
   updateCode(newCode: string): void {
     this.homeState.code = newCode;
     this.homeState.isSaved = false;
+    this.homeState.hasInput = false;
+    this.homeState.userInput = '';
+    this.homeState.terminalResult = undefined;
+    this.homeState.codeState = 'PENDING';
   }
 
   @Provide()
   toRunCode() {
+    this.homeState.terminalResult = undefined;
+    this.homeState.userInput = '';
     this.checkHasInput();
   }
 
   @Provide()
   async runCode(): Promise<void> {
-    this.homeState.terminalResult = '10';
-    console.info('User input received:', this.homeState.userInput);
+    const Loading = ElLoading.service({
+      lock: true,
+      text: 'Running code...',
+      background: 'rgba(0, 0, 0, 0.7)',
+    });
+    try {
+      const runCodeRes = await fetchRunCodeData(
+        this.homeState.code,
+        String(this.homeState.userInput),
+      );
+      console.info('Run code result:', runCodeRes.data);
+      this.homeState.terminalResult = runCodeRes.data;
+    } catch (e) {
+      console.info('Run code error:', e.response.data);
+      return;
+    } finally {
+      Loading.close();
+    }
   }
 
   @Provide()
@@ -64,7 +88,7 @@ export default class App extends Vue {
 
     const loading = ElLoading.service({
       lock: true,
-      text: 'Running code...',
+      text: 'Compiling code...',
       background: 'rgba(0, 0, 0, 0.7)',
     });
 
@@ -83,6 +107,7 @@ export default class App extends Vue {
           ...this.homeState,
           codeState: 'ERROR',
           errorStates: {
+            error: e.response.data.error,
             lexicalErrors: e.response.data,
           },
         };
@@ -103,6 +128,7 @@ export default class App extends Vue {
           ...this.homeState,
           codeState: 'ERROR',
           errorStates: {
+            error: e.response.data.error,
             syntaticErrors: e.response.data,
           },
         };
@@ -120,6 +146,13 @@ export default class App extends Vue {
           },
         };
       } catch (e) {
+        this.homeState = {
+          ...this.homeState,
+          codeState: 'ERROR',
+          errorStates: {
+            error: e.response.data.error,
+          },
+        };
         console.info('Semantic analysis error:', e.response.data);
         return;
       }
@@ -133,6 +166,13 @@ export default class App extends Vue {
           syntaticTreeState: fetchSyntaticTreeRes.data,
         };
       } catch (e) {
+        this.homeState = {
+          ...this.homeState,
+          codeState: 'ERROR',
+          errorStates: {
+            error: e.response.data.error,
+          },
+        };
         console.info('Syntactic tree generation error:', e.response.data);
         return;
       }
@@ -146,7 +186,36 @@ export default class App extends Vue {
           asmCodeState: fetchAsmCodeRes.data,
         };
       } catch (e) {
+        this.homeState = {
+          ...this.homeState,
+          codeState: 'ERROR',
+          errorStates: {
+            error: e.response.data.error,
+          },
+        };
         console.info('Asm code generation error:', e.response.data);
+        return;
+      }
+
+      try {
+        /** Optimized Asm Code Generation */
+        const fetchOptimizedAsmCodeRes = await fetchOptimizedAsmCodeData(this.homeState.code);
+        console.info('Fetched optimized asm code result:', fetchOptimizedAsmCodeRes.optimized_asm);
+        this.homeState = {
+          ...this.homeState,
+          optimizedAsmCodeState: {
+            optimized_asm: fetchOptimizedAsmCodeRes.optimized_asm,
+          },
+        };
+      } catch (e) {
+        this.homeState = {
+          ...this.homeState,
+          codeState: 'ERROR',
+          errorStates: {
+            error: e.response.data.error,
+          },
+        };
+        console.info('Optimized asm code generation error:', e.response.data);
         return;
       }
 

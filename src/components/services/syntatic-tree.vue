@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Vue, Options } from 'vue-class-component';
 import * as echarts from 'echarts';
-import { Prop } from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
 type EChartsOption = echarts.EChartsOption;
 import { SyntaticTreeState } from '@/common/interface/data.vo';
 import { CodeState } from '@/common/enum/data.enum';
@@ -57,7 +57,7 @@ export default class SyntaticTree extends Vue {
         series: [
           {
             type: 'tree',
-            data: [this.treeData],
+            data: [this.treeData()],
             top: '5%',
             left: '10%',
             bottom: '5%',
@@ -102,7 +102,7 @@ export default class SyntaticTree extends Vue {
     });
   }
 
-  get treeData() {
+  private treeData() {
     // 递归转换为 ECharts tree 需要的数据结构，name/type/value 都展示，且 name 允许为 null
     const convert = (node: any) => {
       let label = node.type || '';
@@ -113,15 +113,21 @@ export default class SyntaticTree extends Vue {
         children: Array.isArray(node.son) ? node.son.map(convert) : [],
       };
     };
-    // 兼容 testData 可能是 { data: ... }
-    const root = this.testData;
-    return convert(root);
+    return convert(this.testData);
+  }
+
+  @Watch('testData', { immediate: false, deep: true })
+  onTestDataChange() {
+    if (this.myChart && this.option) {
+      this.option.series[0].data = [this.treeData()];
+      this.myChart.setOption(this.option, true);
+    }
   }
 }
 </script>
 
 <template>
-  <div style="position: relative">
+  <div style="position: relative; width: 100%; display: flex; flex-direction: column; align-items: center;">
     <header class="lc-header" v-if="codeState === 'SUCCESS'">
       <span>Syntactic Tree</span>
       <el-button @click="fullscreen" size="small">全屏</el-button>

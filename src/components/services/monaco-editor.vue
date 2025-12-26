@@ -27,7 +27,7 @@ export default class MonacoEditor extends Vue {
         inherit: true,
         rules: [],
         colors: {
-          'editor.background': '#111111', // 设置背景色
+          'editor.background': '#111111',
         },
       });
 

@@ -1,21 +1,14 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://127.0.0.1:5000';
+const BASE_URL = 'http://frp.coolarec.link';
 
-const fetchData = async (endpoint: string, code?: string) => {
-  if (!code) {
-    const response = await axios.get(`${BASE_URL}/${endpoint}`);
+const fetchData = async (endpoint: string, code?: string, input?: string) => {
+  if (!input) {
+    const response = await axios.post(`${BASE_URL}/${endpoint}`, { code });
     return response.data;
   }
-  const response = await axios.post(
-    `${BASE_URL}/${endpoint}`,
-    { code },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  );
+
+  const response = await axios.post(`${BASE_URL}/${endpoint}`, { code, input_str: input });
   return response.data;
 };
 
@@ -33,8 +26,16 @@ export const fetchSemanticAndIntermediateCodeData = async (code: string) => {
 
 export const fetchSyntaticTreeData = async (code: string) => {
   return fetchData('ast', code);
-}
+};
 
 export const fetchAsmCodeData = async (code: string) => {
   return fetchData('asm', code);
+};
+
+export const fetchRunCodeData = async (code: string, input: string) => {
+  return fetchData('run', code, input);
+};
+
+export const fetchOptimizedAsmCodeData = async (code: string) => {
+  return fetchData('optimize', code);
 }

@@ -81,6 +81,7 @@ export default class Analize extends Vue {
           v-if="homeState.asmCodeState"
           :asmCodeState="homeState.asmCodeState"
           :codeState="homeState.codeState"
+          :optimizedAsmCodeState="homeState.optimizedAsmCodeState"
         />
       </el-tab-pane>
     </el-tabs>
