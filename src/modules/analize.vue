@@ -58,20 +58,20 @@ export default class Analize extends Vue {
         />
       </el-tab-pane>
 
-      <!-- 语义分析 -->
-      <el-tab-pane label="语义分析 & 中间代码生成">
-        <SemanticIntermediateCode
-          v-if="homeState.semanticAndIntermediateCodeState"
-          :semanticAndIntermediateCodeState="homeState.semanticAndIntermediateCodeState"
-        />
-      </el-tab-pane>
-
       <!-- 代码优化 -->
       <el-tab-pane label="代码优化" class="pane-container">
         <SyntaticTree
           v-if="homeState.syntaticTreeState"
           :testData="homeState.syntaticTreeState"
           :codeState="homeState.codeState"
+        />
+      </el-tab-pane>
+
+      <!-- 语义分析 -->
+      <el-tab-pane label="语义分析 & 中间代码生成">
+        <SemanticIntermediateCode
+          v-if="homeState.semanticAndIntermediateCodeState"
+          :semanticAndIntermediateCodeState="homeState.semanticAndIntermediateCodeState"
         />
       </el-tab-pane>
 
